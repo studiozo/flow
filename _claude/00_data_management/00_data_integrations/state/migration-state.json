@@ -1,0 +1,68 @@
+{
+  "version": "1.3",
+  "last_updated": "2026-02-12T23:30:00Z",
+  "last_session": "source-pass2-complete-genre-location-vibe-redistributed",
+  "current_phase": "COMPLETE",
+  "current_phase_name": "ALL PHASES COMPLETE",
+  "next_action": "Manual moves of 11 Google-native virtual files via drive.google.com. Old folder cleanup (user decision).",
+  "safety": {
+    "delete_policy": "NEVER",
+    "move_method": "MV",
+    "audit_required": true
+  },
+  "drive_base": "~/Library/CloudStorage/GoogleDrive-zo@studiozonyc.com/My Drive",
+  "ops_base": "~/00_ZØ_CØDE/_claude/00_data_management/00_data_integrations",
+  "skeleton": {
+    "0_CORE": { "created": true, "verified": true },
+    "1_VIBRATIONS": { "created": true, "verified": true },
+    "2_VISUALS": { "created": true, "verified": true },
+    "3_VOGUE": { "created": true, "verified": true },
+    "4_AGENTIC": { "created": true, "verified": true },
+    "5_PAY_THE_DOLLS": { "created": true, "verified": true },
+    "6_ADVENTURES": { "created": true, "verified": true },
+    "7_PROJECTS": { "created": true, "verified": true },
+    "8_COLLABS": { "created": true, "verified": true },
+    "9_ARCHIVE": { "created": true, "verified": true }
+  },
+  "migration": {
+    "phase_1_CORE": { "status": "complete", "files_moved": 55 },
+    "phase_2_COLLABS": { "status": "complete", "files_moved": 20 },
+    "phase_3_AGENTIC": { "status": "complete", "files_moved": 143, "virtual_manual_move": 26 },
+    "phase_4_ADVENTURES": { "status": "complete", "files_moved": 6 },
+    "phase_5_PROJECTS": { "status": "complete", "files_moved": 13, "virtual_remaining_at_root": 11 },
+    "phase_6A_VIBRATIONS_structural": { "status": "complete", "files_moved": 18 },
+    "phase_6B_VIBRATIONS_music_library": { "status": "complete", "files_moved": 89, "items_sorted": 10296, "sections": 4 },
+    "phase_7_VISUALS": { "status": "complete", "files_moved": 16 },
+    "phase_8_VOGUE": { "status": "complete", "files_moved": 6 },
+    "phase_9_PTD": { "status": "complete", "files_moved": 0, "note": "populated via cross-routing" },
+    "phase_10_ARCHIVE": { "status": "complete", "files_moved": 0, "note": "built empty, populates as releases complete" },
+    "scaffold_cleanup": { "status": "complete", "decimal_renames": 320 },
+    "source_pass2": { "status": "complete", "items_moved": 1372, "folder_ops": 15, "genre_moves": 1068, "location_moves": 178, "vibe_moves": 117, "space_moves": 9 }
+  },
+  "music_library_structure": {
+    "11.02_SOURCE": 393,
+    "11.02_SOURCE_active_folders": 6,
+    "11.02_SOURCE_empty_shells": 13,
+    "11.03_GENRE_shamanic_wheel": 2276,
+    "11.04_LOCATION": 511,
+    "11.05_VIBE": 192,
+    "11.06_SETS": 350,
+    "11.07_TRACK_IDs": 119,
+    "11.09_ZO_MASTER": 6
+  },
+  "old_folders_alive": [
+    "00 MASTER PIECES (EMPTIED)",
+    "01 ZØ MUSIC (MOSTLY EMPTIED - Music/ app data remains)",
+    "02 VIDEØS (EMPTIED)",
+    "03 IMAGES (EMPTIED)",
+    "04 DESIGNS (EMPTIED)",
+    "05 PRØJECTS (EMPTIED)",
+    "06 CØLLABS (EMPTIED)",
+    "07 AI STUDIØ (MOSTLY EMPTIED - node_modules + 25 virtual)",
+    "08 DØWNLØADS (EMPTIED)",
+    "09 ZØ PERSONAL ADMIN (EMPTIED - gdocs remain)",
+    "10 STuDiØ ZØ (EMPTIED - gdocs + empty subs remain)",
+    "11.90-ZØ-MUSIC-LIBRARY (EMPTIED - shells only)",
+    "11.91-REKORDBOX LIBRARY (EMPTIED - shells only)"
+  ]
+}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZO — Account Consolidation & Agent Access Plan</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0a0a1a; color: #e0e0e0; line-height: 1.6; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  h1 { font-size: 2rem; color: #fff; margin-bottom: 4px; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.95rem; margin-bottom: 48px; }
+
+  .section-title { font-size: 1.3rem; color: #fff; margin: 48px 0 8px; padding-bottom: 8px; border-bottom: 1px solid #222; }
+  .section-desc { color: #888; font-size: 0.85rem; margin-bottom: 24px; }
+
+  /* Email cards */
+  .email-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .email-card { background: #111122; border: 1px solid #222; border-radius: 12px; padding: 24px; position: relative; }
+  .email-card.business { border-left: 4px solid #3b82f6; }
+  .email-card.personal { border-left: 4px solid #a855f7; }
+  .email-card.delete { border-left: 4px solid #ef4444; opacity: 0.7; }
+  .email-card.agent { border-left: 4px solid #10b981; }
+
+  .email-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
+  .email-label.biz { color: #3b82f6; }
+  .email-label.pers { color: #a855f7; }
+  .email-label.del { color: #ef4444; }
+  .email-label.agt { color: #10b981; }
+
+  .email-addr { font-size: 1.05rem; color: #fff; font-weight: 600; margin-bottom: 4px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .email-purpose { color: #999; font-size: 0.85rem; margin-bottom: 16px; }
+
+  .account-list { list-style: none; }
+  .account-list li { padding: 6px 0; font-size: 0.85rem; color: #ccc; border-bottom: 1px solid #1a1a2e; display: flex; justify-content: space-between; align-items: center; }
+  .account-list li:last-child { border-bottom: none; }
+
+  .tag { font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .tag.keep { background: #10b98120; color: #10b981; }
+  .tag.move { background: #f59e0b20; color: #f59e0b; }
+  .tag.delete { background: #ef444420; color: #ef4444; }
+  .tag.new { background: #3b82f620; color: #3b82f6; }
+  .tag.agent { background: #10b98120; color: #10b981; border: 1px solid #10b98140; }
+
+  .move-arrow { color: #f59e0b; font-size: 0.75rem; }
+
+  /* Phase out strip */
+  .phase-out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+
+  /* Agent section */
+  .agent-section { background: linear-gradient(135deg, #0a1a15 0%, #111122 100%); border: 1px solid #10b98130; border-radius: 12px; padding: 32px; margin: 32px 0; }
+  .agent-section h3 { color: #10b981; font-size: 1.1rem; margin-bottom: 16px; }
+
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .tier-card { background: #0a0a1a; border: 1px solid #222; border-radius: 8px; padding: 16px; }
+  .tier-card h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .tier-card.full h4 { color: #10b981; }
+  .tier-card.read h4 { color: #3b82f6; }
+  .tier-card.none h4 { color: #ef4444; }
+  .tier-card ul { list-style: none; }
+  .tier-card li { font-size: 0.8rem; color: #bbb; padding: 3px 0; }
+
+  /* Consolidation flow */
+  .flow-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  .flow-table th { background: #1a1a2e; color: #888; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; border-bottom: 1px solid #333; }
+  .flow-table td { padding: 10px 14px; font-size: 0.85rem; border-bottom: 1px solid #1a1a2e; }
+  .flow-table tr:hover { background: #111122; }
+  .flow-table .service { color: #fff; font-weight: 500; }
+  .flow-table .from { color: #888; font-family: monospace; font-size: 0.8rem; }
+  .flow-table .to { color: #10b981; font-family: monospace; font-size: 0.8rem; font-weight: 500; }
+  .flow-table .action { color: #f59e0b; font-size: 0.8rem; }
+
+  /* Checklist */
+  .checklist { margin: 20px 0; }
+  .check-phase { margin-bottom: 24px; }
+  .phase-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 10px; padding: 4px 12px; border-radius: 4px; display: inline-block; }
+  .phase-label.p1 { background: #ef444420; color: #ef4444; }
+  .phase-label.p2 { background: #f59e0b20; color: #f59e0b; }
+  .phase-label.p3 { background: #3b82f620; color: #3b82f6; }
+  .phase-label.p4 { background: #a855f720; color: #a855f7; }
+
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 0.85rem; color: #ccc; }
+  .check-box { width: 16px; height: 16px; border: 1.5px solid #444; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  .check-item .note { color: #666; font-size: 0.75rem; }
+
+  /* Warning box */
+  .warning { background: #ef444410; border: 1px solid #ef444430; border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 0.85rem; color: #f87171; }
+  .warning strong { color: #ef4444; }
+
+  .tip { background: #10b98110; border: 1px solid #10b98130; border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 0.85rem; color: #6ee7b7; }
+  .tip strong { color: #10b981; }
+
+  @media (max-width: 768px) {
+    .email-grid, .tier-grid, .phase-out-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>ZO — Account Consolidation Plan</h1>
+  <p class="subtitle">4 emails → 2 emails + agent access layer &nbsp;·&nbsp; February 2026</p>
+
+  <!-- ════════ THE TWO KEEPERS ════════ -->
+  <div class="section-title">The Two Emails You Keep</div>
+  <p class="section-desc">Everything consolidates down to these two. Clean separation: business vs. personal.</p>
+
+  <div class="email-grid">
+
+    <!-- BUSINESS -->
+    <div class="email-card business">
+      <div class="email-label biz">Business — Studio ZO</div>
+      <div class="email-addr">zo@studiozonyc.com</div>
+      <p class="email-purpose">Creative studio, public-facing, client work, music, social media, tools, subscriptions</p>
+      <ul class="account-list">
+        <li><span>Google Workspace</span> <span class="tag keep">stays</span></li>
+        <li><span>Apple ID</span> <span class="tag keep">stays</span></li>
+        <li><span>Distrokid</span> <span class="tag keep">stays</span></li>
+        <li><span>Soundcloud</span> <span class="tag keep">stays</span></li>
+        <li><span>Submithub</span> <span class="tag keep">stays</span></li>
+        <li><span>Rekordbox</span> <span class="tag keep">stays</span></li>
+        <li><span>Github</span> <span class="tag keep">stays</span></li>
+        <li><span>n8n</span> <span class="tag keep">stays</span></li>
+        <li><span>Later</span> <span class="tag keep">stays</span></li>
+        <li><span>UNUM</span> <span class="tag keep">stays</span></li>
+        <li><span>USPTO</span> <span class="tag keep">stays</span></li>
+        <li><span>DLTA Print</span> <span class="tag keep">stays</span></li>
+        <li><span>Amazon Prime</span> <span class="tag keep">stays</span></li>
+        <li><span>American Airlines</span> <span class="tag keep">stays</span></li>
+        <li><span>Coinbase</span> <span class="tag keep">stays</span></li>
+        <li><span>Mercury (banking)</span> <span class="tag keep">stays</span></li>
+        <li><span class="move-arrow">← Landr</span> <span class="tag move">move from zovivaa</span></li>
+        <li><span class="move-arrow">← Squarespace</span> <span class="tag move">move from zovivaa</span></li>
+        <li><span class="move-arrow">← Meta / Facebook</span> <span class="tag move">claim here</span></li>
+        <li><span class="move-arrow">← Deezer</span> <span class="tag move">claim here</span></li>
+        <li><span class="move-arrow">← Depop</span> <span class="tag new">find & add</span></li>
+        <li><span class="move-arrow">← Grailed</span> <span class="tag move">move from personal (if for resale biz)</span></li>
+        <li><span class="move-arrow">← PayTheDolls</span> <span class="tag new">find & add</span></li>
+        <li><span class="move-arrow">← Claude</span> <span class="tag new">find & add</span></li>
+      </ul>
+    </div>
+
+    <!-- PERSONAL -->
+    <div class="email-card personal">
+      <div class="email-label pers">Personal — Zoe</div>
+      <div class="email-addr">zoetouloupis@gmail.com</div>
+      <p class="email-purpose">Health records, personal finance, insurance, utilities, personal shopping</p>
+      <ul class="account-list">
+        <li><span>Google (personal)</span> <span class="tag keep">stays</span></li>
+        <li><span>Instagram (re.zoed)</span> <span class="tag keep">stays</span></li>
+        <li><span>ConEd</span> <span class="tag keep">stays</span></li>
+        <li><span>MyChart</span> <span class="tag keep">stays</span></li>
+        <li><span>Northwell</span> <span class="tag keep">stays</span></li>
+        <li><span>OneHealthcare ID</span> <span class="tag keep">stays</span></li>
+        <li><span>Principal (retirement)</span> <span class="tag keep">stays</span></li>
+        <li><span>Verizon</span> <span class="tag keep">stays</span></li>
+        <li><span>Grailed</span> <span class="tag keep">stays (if personal shopping)</span></li>
+        <li><span class="move-arrow">← Optum</span> <span class="tag move">move from MSCI email</span></li>
+        <li><span class="move-arrow">← SFF</span> <span class="tag move">claim here (legal/estate)</span></li>
+      </ul>
+      <div class="warning" style="margin-top: 16px;">
+        <strong>Rule:</strong> The agent should NEVER touch this email. Health, finance, and personal data stay fully manual.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ THE TWO TO KILL ════════ -->
+  <div class="section-title">The Two Emails You Close</div>
+  <p class="section-desc">Migrate anything useful first, then shut them down one account at a time.</p>
+
+  <div class="phase-out-grid">
+    <div class="email-card delete">
+      <div class="email-label del">Phase Out — Old Music/Art</div>
+      <div class="email-addr">zovivaa.info@gmail.com</div>
+      <p class="email-purpose">Migrate music/art accounts to zo@studiozonyc.com, then close.</p>
+      <ul class="account-list">
+        <li><span>Squarespace</span> <span class="tag move">→ move to business</span></li>
+        <li><span>Landr</span> <span class="tag move">→ move to business</span></li>
+        <li><span>IG (zovivaa)</span> <span class="tag delete">archive & delete</span></li>
+        <li><span>Google account</span> <span class="tag delete">close last</span></li>
+      </ul>
+    </div>
+    <div class="email-card delete">
+      <div class="email-label del">Delete — Inactive</div>
+      <div class="email-addr">zoevivaa@gmail.com</div>
+      <p class="email-purpose">Export data (Google Takeout), then delete the whole account.</p>
+      <ul class="account-list">
+        <li><span>Google Takeout export</span> <span class="tag move">→ download backup</span></li>
+        <li><span>Google account</span> <span class="tag delete">delete</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ════════ MOVES TABLE ════════ -->
+  <div class="section-title">Every Account That Needs to Move</div>
+  <p class="section-desc">These accounts are currently on the wrong email. Change the login email on each service.</p>
+
+  <table class="flow-table">
+    <thead>
+      <tr><th>Service</th><th>Currently On</th><th>Move To</th><th>How</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="service">Squarespace</td>
+        <td class="from">zovivaa.info@gmail.com</td>
+        <td class="to">zo@studiozonyc.com</td>
+        <td class="action">Settings → Account → Change email</td>
+      </tr>
+      <tr>
+        <td class="service">Landr</td>
+        <td class="from">zovivaa.info@gmail.com</td>
+        <td class="to">zo@studiozonyc.com</td>
+        <td class="action">Account Settings → Email → Update</td>
+      </tr>
+      <tr>
+        <td class="service">Optum</td>
+        <td class="from">zoe.touloupis@msci.com</td>
+        <td class="to">zoetouloupis@gmail.com</td>
+        <td class="action">Profile → Contact Info → Change email (urgent — MSCI email may expire)</td>
+      </tr>
+      <tr>
+        <td class="service">Meta / Facebook</td>
+        <td class="from">Unknown / no email</td>
+        <td class="to">zo@studiozonyc.com</td>
+        <td class="action">Settings → Personal Info → Contact → Add email</td>
+      </tr>
+      <tr>
+        <td class="service">Verizon</td>
+        <td class="from">Unknown</td>
+        <td class="to">zoetouloupis@gmail.com</td>
+        <td class="action">My Verizon → Profile → Update email</td>
+      </tr>
+      <tr>
+        <td class="service">Deezer</td>
+        <td class="from">Unknown</td>
+        <td class="to">zo@studiozonyc.com</td>
+        <td class="action">Settings → Account → Email</td>
+      </tr>
+      <tr>
+        <td class="service">SFF (legal)</td>
+        <td class="from">psztouloupis</td>
+        <td class="to">zoetouloupis@gmail.com</td>
+        <td class="action">Update login email in account settings</td>
+      </tr>
+      <tr>
+        <td class="service">Delya</td>
+        <td class="from">Phone: 9135103092</td>
+        <td class="to">zo@studiozonyc.com</td>
+        <td class="action">Add email to account for recovery</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ════════ AGENT ACCESS ════════ -->
+  <div class="section-title">Agent Access Architecture</div>
+  <p class="section-desc">Your OpenClaw agent gets three tiers of access. Never give the agent your personal email.</p>
+
+  <div class="agent-section">
+    <h3>🤖 OpenClaw Agent — Access Tiers</h3>
+    <p style="color: #999; font-size: 0.85rem; margin-bottom: 20px;">The agent operates ONLY through zo@studiozonyc.com. Personal accounts are fully walled off.</p>
+
+    <div class="tier-grid">
+      <div class="tier-card full">
+        <h4>Full Access — Agent Can Act</h4>
+        <p style="font-size: 0.75rem; color: #666; margin-bottom: 10px;">Agent can read, post, schedule, manage</p>
+        <ul>
+          <li>Later (social scheduling)</li>
+          <li>UNUM (social planning)</li>
+          <li>n8n (automation flows)</li>
+          <li>Github (code/repos)</li>
+          <li>Submithub (music submissions)</li>
+          <li>DLTA Print (ordering)</li>
+          <li>Squarespace (website CMS)</li>
+          <li>Claude (AI assistant)</li>
+          <li>Soundcloud (uploads)</li>
+        </ul>
+      </div>
+
+      <div class="tier-card read">
+        <h4>Read-Only — Agent Can Monitor</h4>
+        <p style="font-size: 0.75rem; color: #666; margin-bottom: 10px;">Agent can see data but not take action</p>
+        <ul>
+          <li>Distrokid (streaming stats)</li>
+          <li>Rekordbox (library/sets)</li>
+          <li>Instagram — Studio ZO (analytics)</li>
+          <li>Meta / Facebook (insights)</li>
+          <li>Deezer (stats)</li>
+          <li>American Airlines (itineraries)</li>
+          <li>Amazon Prime (order tracking)</li>
+          <li>Landr (masters/assets)</li>
+        </ul>
+      </div>
+
+      <div class="tier-card none">
+        <h4>No Access — Agent Locked Out</h4>
+        <p style="font-size: 0.75rem; color: #666; margin-bottom: 10px;">Manual only. Never expose to automation.</p>
+        <ul>
+          <li>Coinbase (crypto/money)</li>
+          <li>Mercury (banking)</li>
+          <li>Principal (retirement)</li>
+          <li>Apple ID (identity)</li>
+          <li>USPTO (legal/IP)</li>
+          <li>ALL health accounts</li>
+          <li>ALL personal email accounts</li>
+          <li>ConEd (utilities)</li>
+          <li>Verizon (telecom)</li>
+          <li>SFF (legal/estate)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top: 20px;">
+      <strong>Setup tip:</strong> Create API keys or app-specific passwords for the "Full Access" tier. Never give the agent your main login password. Use OAuth tokens or service-specific API keys wherever possible (n8n, Github, Later, Squarespace all support this).
+    </div>
+  </div>
+
+  <!-- ════════ EXECUTION CHECKLIST ════════ -->
+  <div class="section-title">Execution Checklist</div>
+  <p class="section-desc">Work through these in order. Don't skip phases.</p>
+
+  <div class="checklist">
+    <div class="check-phase">
+      <div class="phase-label p1">Phase 1 — Secure (Do Today)</div>
+      <div class="check-item"><div class="check-box"></div><div>Set up 1Password or Bitwarden — this becomes your single source of truth</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Change Coinbase password to something unique and random (64+ chars from password manager)</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Change Principal (retirement) password — unique, random</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Change Mercury password — unique, random</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Enable 2FA on zo@studiozonyc.com Google account</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Enable 2FA on zoetouloupis@gmail.com Google account</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Enable 2FA on Apple ID</div></div>
+    </div>
+
+    <div class="check-phase">
+      <div class="phase-label p2">Phase 2 — Consolidate (This Week)</div>
+      <div class="check-item"><div class="check-box"></div><div>Export Google Password Manager saved passwords from ALL 3 Gmails → import into password manager</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Search all Gmails for "verify your email" / "welcome to" → add discovered accounts to master list</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Check haveibeenpwned.com for all 4 email addresses</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Move Optum login from MSCI email → zoetouloupis@gmail.com</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Move Squarespace from zovivaa.info → zo@studiozonyc.com</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Move Landr from zovivaa.info → zo@studiozonyc.com</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Assign Meta/Facebook to zo@studiozonyc.com</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Fix Github email typo (studiozoyc → studiozonyc)</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Identify & document Vera, Delya, and any unknown accounts</div></div>
+    </div>
+
+    <div class="check-phase">
+      <div class="phase-label p3">Phase 3 — Close Old Emails (Next 2 Weeks)</div>
+      <div class="check-item"><div class="check-box"></div><div>Export zoevivaa@gmail.com via Google Takeout</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Check zoevivaa@gmail.com for any forwarding rules or connected apps</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Delete zoevivaa@gmail.com Google account</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Export any content from zovivaa.info accounts you want to keep</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Archive/download Instagram (zovivaa) content if wanted</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Delete individual zovivaa.info accounts (Squarespace, Landr, IG) after migration</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Delete zovivaa.info@gmail.com Google account (do this LAST)</div></div>
+    </div>
+
+    <div class="check-phase">
+      <div class="phase-label p4">Phase 4 — Agent Setup (Month 1)</div>
+      <div class="check-item"><div class="check-box"></div><div>Generate unique passwords for all remaining accounts via password manager</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Create API keys / OAuth tokens for "Full Access" tier accounts</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Set up n8n workflows connecting Full Access tier services</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Configure read-only API connections for monitoring tier</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Test agent with one workflow (e.g., auto-schedule social posts via Later)</div></div>
+      <div class="check-item"><div class="check-box"></div><div>Document all API keys in password manager under "OpenClaw Agent" vault</div></div>
+    </div>
+  </div>
+
+  <div class="warning">
+    <strong>⚠️ Delete your original CSV export.</strong> The file "zoe_password_database_2-21-26_start.zip" contains all your passwords in plain text. Once everything is imported into your password manager, delete this file from your computer, downloads folder, email, and anywhere else it exists.
+  </div>
+
+</div>
+</body>
+</html>

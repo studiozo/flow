@@ -1,0 +1,25 @@
+services:
+  migration:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+    container_name: zo-data-migration
+    stdin_open: true
+    tty: true
+    volumes:
+      # Project workspace
+      - /Users/studiozo/00_ZØ_CØDE:/workspace
+      # Google Drive (streaming mount)
+      - "/Users/studiozo/Library/CloudStorage/GoogleDrive-zo@studiozonyc.com/My Drive:/gdrive"
+      # Claude auth config
+      - /Users/studiozo/.claude:/home/node/.claude
+      # Persistent shell history
+      - zo-migration-bashhistory:/commandhistory
+    working_dir: /workspace
+    environment:
+      - CLAUDE_CONFIG_DIR=/home/node/.claude
+      - NODE_OPTIONS=--max-old-space-size=4096
+    command: zsh
+
+volumes:
+  zo-migration-bashhistory:

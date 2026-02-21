@@ -1,0 +1,44 @@
+{
+  "name": "ZØ Data Migration — YOLO Mode",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:America/New_York}"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": { "path": "zsh" }
+        }
+      }
+    }
+  },
+  "remoteUser": "node",
+  "mounts": [
+    {
+      "source": "${localEnv:HOME}/.claude",
+      "target": "/home/node/.claude",
+      "type": "bind"
+    },
+    {
+      "source": "${localEnv:HOME}/Library/CloudStorage/GoogleDrive-zo@studiozonyc.com/My Drive",
+      "target": "/gdrive",
+      "type": "bind"
+    },
+    {
+      "source": "zo-migration-bashhistory",
+      "target": "/commandhistory",
+      "type": "volume"
+    }
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "echo '\\n=== ZØ DATA MIGRATION CONTAINER READY ===\\nGoogle Drive mounted at: /gdrive\\nWorkspace at: /workspace\\n\\nRun: yolo    (starts Claude Code in YOLO mode)\\nRun: resume  (continues last session)\\n==='",
+  "forwardPorts": []
+}

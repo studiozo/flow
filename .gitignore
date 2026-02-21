@@ -1,0 +1,6 @@
+.DS_Store
+*.tmp
+*.swp
+.env
+_claude/claude-code/
+_claude/mcps/mcp-ableton/
