@@ -1,199 +1,132 @@
-# agent.iZØ Integration Plan
+# agent.iZØ Integration Plan v2
+
+## The Realization
+iCloud Drive IS the flow. Documents syncs across all devices automatically. The ZØNE system already exists. We don't need a separate FLØW folder — that's just adding a middleman to something iCloud already does.
 
 ## The Setup
-- **MacBook Pro M4 Pro** = workbench (Ableton, Lightroom, coding, heavy creative work)
-- **Mac mini** = agent host (OpenClaw runs here 24/7, always-on ops)
-- **iPhone** = mobile (on-the-go drops, approvals, comms)
-- **Google Drive** = data lake archive (long-term, organized, searchable)
-- **iCloud Drive** = cross-device shuttle (active work syncs everywhere)
-- **GitHub** = code + agent brain (text configs, repos, no large files)
+- **MacBook Pro M4 Pro** = workbench (create everything here)
+- **Mac mini** = agent host (I read/write Documents from here, always on)
+- **iPhone** = mobile (Files app, same Documents folder, Telegram for me)
+- **iCloud Documents** = THE shared filesystem. One folder tree, all devices.
+- **Google Drive** = data lake archive (client docs, long-term storage, organized)
+- **GitHub** = code repos + agent brain config only
 
----
-
-## The Core Concept
+## The Architecture
 
 ```
-MacBook Pro (create) → iCloud Drive (sync) → Mac mini (agent reads/processes)
-                                            → iPhone (access anywhere)
-                                            → Google Drive (archive)
+~/Documents/                     ← iCloud synced, all 3 devices see this
+├── ZØNE 1: MUSIC/              ← Ableton projects, stems, exports, library
+│   ├── 00 ZØ ABLETØN/
+│   ├── 01 ZØ LØGIC/
+│   ├── 04 SETS & ALBUMS/
+│   │   └── Theory/             ← album folder
+│   │       ├── tracks/
+│   │       ├── stems/
+│   │       ├── artwork/
+│   │       └── release-notes.md
+│   └── NAU KIKI ZO Audio Files/
+│
+├── ZØNE 2: IMAGE/              ← Photos, album art, lookbook, mood boards
+│   ├── headshots/
+│   ├── album-art/
+│   ├── lookbook/
+│   └── social/
+│
+├── ZØNE 3: VIDEØ/              ← Video projects, social cuts, DJ sets
+│   ├── 00 SOCIAL MEDIA QUICK EDITS/
+│   ├── 01 CYCLORAMA/
+│   └── ...
+│
+├── ZØNE 4: RELEASES/           ← Final packaged releases ready to ship
+│   ├── 00 IZØ/
+│   ├── 01 GENESIS/
+│   └── ...
+│
+├── ZØNE 5: PRØJECTS/           ← Client work, active project files
+│   ├── exodus/
+│   ├── moda/
+│   ├── nau-leone/
+│   └── fashion-collection/
+│
+├── ZØNE 6: SCRATCH/            ← Temp, experiments, drafts, brain dumps
+│   ├── inbox/                  ← DROP ANYTHING → I pick it up
+│   └── outbox/                 ← I put stuff here → you grab it
+│
+└── AGENT/                      ← NEW: agent workspace in Documents
+    ├── inbox/                  ← You → me (files, briefs, questions)
+    ├── outbox/                 ← Me → you (deliverables, reports)
+    ├── briefs/                 ← Active project briefs
+    ├── reports/                ← Daily/weekly summaries
+    └── logs/                   ← Action logs
 ```
 
-You work locally on M4 Pro. When something's done or needs agent attention, it lands in iCloud FLØW. I pick it up from Mac mini. Google Drive is the final resting place — the archive, the data lake, the source of truth.
+## How It Works
 
----
+### You on MacBook Pro:
+1. Work in Ableton, Lightroom, whatever — all local, full speed
+2. Projects auto-save into Documents/ZØNE folders
+3. iCloud syncs to Mac mini + iPhone automatically
+4. I can read everything from Mac mini
 
-## Route 1: FLØW Pipeline (Recommended)
+### You finish a song:
+1. Export final in Ableton → save to `ZØNE 1: MUSIC/04 SETS & ALBUMS/Theory/tracks/`
+2. It syncs to Mac mini via iCloud
+3. I see it, log it, draft metadata, ping you on Telegram
+4. You approve
+5. I copy release package to `ZØNE 4: RELEASES/` 
+6. I archive to Google Drive data lake
 
-**How it works:** iCloud Drive is the central nervous system. You work locally, drop finished/reviewable work into FLØW zones. I watch them from Mac mini.
+### You finish album art:
+1. Export from Lightroom → `ZØNE 2: IMAGE/album-art/`
+2. Syncs everywhere
+3. I pair it with the right release in ZØNE 4
 
-```
-MacBook Pro (local work)
-  │
-  ├── Finish a song in Ableton
-  │   └── Export → drop in iCloud/FLØW/MUSIC FLØW/tø-review/
-  │
-  ├── Finish album art in Lightroom
-  │   └── Export → drop in iCloud/FLØW/IMAGE FLØW/tø-review/
-  │
-  ├── Write copy, captions, briefs
-  │   └── Save to iCloud/FLØW/WØRKING/drafts/
-  │
-  └── Code changes
-      └── git push → GitHub (I pull on Mac mini)
+### You want me to do something:
+1. Drop a file/note in `Documents/AGENT/inbox/`
+2. Or just tell me on Telegram
+3. I put results in `Documents/AGENT/outbox/`
 
-Mac mini (agent.iZØ)
-  │
-  ├── Watches FLØW/AGENT FLØW/inbox/ for anything you drop
-  ├── Reads tø-review folders across MUSIC/IMAGE/VIDEØ
-  ├── Processes, organizes, drafts metadata
-  ├── Archives finished work → Google Drive (via gog)
-  └── Puts deliverables in FLØW/AGENT FLØW/outbox/
+### Quick phone drop:
+1. Open Files app → `AGENT/inbox/` → drop voice memo, photo, whatever
+2. I pick it up on Mac mini
 
-iPhone
-  │
-  ├── Quick drops → FLØW/AGENT FLØW/inbox/ (voice memos, photos, notes)
-  ├── Review outbox/ for agent deliverables
-  └── Approve/reject via Telegram
-```
+## What Goes Where
 
-**Folder structure (already exists, just needs activation):**
-```
-iCloud Drive/FLØW/
-├── AGENT FLØW/
-│   ├── inbox/        ← DROP ANYTHING HERE from any device
-│   ├── outbox/       ← I put finished work here
-│   ├── staging/      ← Work in progress
-│   ├── logs/         ← Synced action logs
-│   └── reports/      ← Daily/weekly summaries
-├── MUSIC FLØW/
-│   ├── frøm-phøne/   ← Voice memos, samples from iPhone
-│   ├── tø-review/    ← Finished tracks for review/mastering notes
-│   ├── approved/     ← Final versions → archive to Google Drive
-│   └── før-cøllab/   ← Files to share with collaborators
-├── IMAGE FLØW/       ← Same pipeline (album art, photos, lookbook)
-├── VIDEØ FLØW/       ← Same pipeline (edits, social cuts)
-├── WØRKING/
-│   ├── drafts/       ← Active writing, copy, briefs
-│   ├── notes/        ← Meeting notes, ideas, stream of consciousness
-│   └── briefs/       ← Project briefs, creative direction docs
-├── CAPTURES/         ← Screenshots, recordings, quick refs
-└── CØNFIGS/          ← Templates, presets, system configs
-```
+| Content | Where it lives | Why |
+|---------|---------------|-----|
+| Active music projects | ZØNE 1: MUSIC | iCloud sync, local Ableton access |
+| Photos, art, visuals | ZØNE 2: IMAGE | iCloud sync |
+| Video projects | ZØNE 3: VIDEØ | iCloud sync |
+| Final release packages | ZØNE 4: RELEASES | Ready to ship |
+| Client project files | ZØNE 5: PRØJECTS | Active work |
+| Scratch/temp/experiments | ZØNE 6: SCRATCH | Disposable |
+| Agent comms & deliverables | AGENT/ | Me ↔ you |
+| Client docs, contracts, archive | Google Drive | Long-term, organized |
+| Code, repos | GitHub | Version control |
+| Agent brain, memory, configs | GitHub (flow/openclaw/) | Backed up, versioned |
 
-**The lifecycle of a finished song:**
-1. You produce in Ableton on M4 Pro (local, fast, no lag)
-2. Export final WAV + stems → drop in `FLØW/MUSIC FLØW/tø-review/Theory - Track 03 - Void/`
-3. I see it on Mac mini, log it, draft metadata (title, BPM, key, tags)
-4. You approve via Telegram
-5. I move to `approved/` and archive to Google Drive `1 VIBRATIØNS/Theory Album/`
-6. Album art from `IMAGE FLØW/approved/` gets paired with it
-7. Copy from `WØRKING/drafts/` gets matched
-8. Everything's packaged and ready for distribution
+## What Needs to Happen
 
-**Pros:** Uses your existing FLØW structure. No new tools. iCloud handles sync automatically. I just watch the folders.
-**Cons:** iCloud sync can be slow with large files. No version control on creative files.
+### Right now:
+1. Create `~/Documents/AGENT/` folder structure on Mac mini (I can do this)
+2. It syncs to your other devices via iCloud
+3. Run `gog auth add zo@studiozonyc.com --services drive` for Drive archive access
 
----
+### When you're back at MacBook Pro:
+1. Verify iCloud sync is working for Documents
+2. Make sure ZØNE folders are downloading (not just placeholders)
+3. Test: drop a file in `Documents/AGENT/inbox/` → tell me on Telegram → confirm I see it
 
-## Route 2: Git-Annex Hybrid
+### The key insight:
+**No FLØW folder needed.** Documents IS the flow. The ZØNEs are the zones. iCloud is the sync. The only new thing is the `AGENT/` folder for our inbox/outbox. Everything else already exists.
 
-**How it works:** GitHub for text/configs/small files + git-annex or Git LFS for tracking large creative files without actually storing them on GitHub.
+## Google Drive Role (Archive Only)
 
-```
-MacBook Pro
-  │
-  └── Local git repo (flow/) tracks everything:
-      ├── openclaw/          ← agent brain (pushed to GitHub)
-      ├── releases/          ← git-annex pointers (metadata only on GitHub)
-      │   └── theory-album/
-      │       ├── track-03-void.wav.annex  ← pointer, actual file stays local
-      │       ├── album-art-v2.png.annex
-      │       └── release-notes.md         ← actual text, on GitHub
-      └── working/           ← active project tracking
-```
+Google Drive is NOT for active work. It's the archive:
+- Finished releases get archived there (organized by project)
+- Client contracts, invoices, legal docs live there
+- Meeting transcripts (Gemini-generated) live there
+- Old project files get archived there
+- I use `gog` CLI to read/write/organize
 
-**How large files move:**
-1. git-annex stores a pointer on GitHub (tiny, just a hash)
-2. Actual file lives on MacBook Pro + iCloud Drive + Google Drive
-3. Mac mini can pull the actual file when needed via iCloud or Drive
-4. You get version history without GitHub storage limits
-
-**Pros:** Version control on everything. Clean history. Can track what changed when.
-**Cons:** git-annex is extra tooling. Learning curve. Overkill unless you need version history on creative files.
-
----
-
-## Route 3: Google Drive as Primary (Simplest)
-
-**How it works:** Skip the iCloud middle layer for finished work. MacBook Pro works local → uploads directly to Google Drive organized folders. Mac mini reads Drive via gog. iCloud only for quick shuttle / phone drops.
-
-```
-MacBook Pro
-  │
-  ├── Work locally in Ableton/Lightroom/etc
-  ├── Finished work → Google Drive (via Drive for Desktop app)
-  │   └── 1 VIBRATIØNS/Theory Album/Track 03/
-  │       ├── track-03-void-final.wav
-  │       ├── album-art.png
-  │       └── release-notes.md
-  │
-  └── Quick files / phone stuff → iCloud FLØW (fast shuttle)
-
-Mac mini (agent.iZØ)
-  │
-  ├── Reads Google Drive via gog CLI
-  ├── Monitors specific Drive folders for new files
-  ├── Processes, organizes, drafts metadata
-  └── iCloud FLØW only for agent inbox/outbox
-
-iPhone
-  │
-  ├── Google Drive app for browsing archive
-  ├── iCloud FLØW/AGENT FLØW/inbox/ for quick drops
-  └── Telegram for agent comms
-```
-
-**Pros:** One source of truth (Google Drive). No sync conflicts. Everything's searchable. I have direct access via gog.
-**Cons:** Needs "Google Drive for Desktop" on MacBook Pro. Upload speeds depend on internet. Less offline-friendly than iCloud.
-
----
-
-## My Recommendation: Route 1 (FLØW Pipeline) + Route 3 Archive
-
-**Use both:**
-- **iCloud FLØW** = active work pipeline (fast sync, offline-capable, phone-friendly)
-- **Google Drive** = archive + data lake (organized, searchable, long-term)
-- **GitHub** = code + agent brain only
-
-**The workflow:**
-1. Work locally on M4 Pro (fast, no lag, full creative power)
-2. Drop finished/review work into iCloud FLØW zones
-3. I process on Mac mini → archive to Google Drive
-4. Google Drive is the organized, permanent home
-5. iCloud FLØW is the conveyor belt — things move through, not pile up
-
-**Key rule:** FLØW is a transit system, not storage. Files move through it. Google Drive is where things live permanently.
-
----
-
-## What I Need From You
-
-1. **Run on Mac mini terminal:** `gog auth add zo@studiozonyc.com --services drive` (gives me Drive access)
-2. **On MacBook Pro (when you're back):**
-   - Make sure iCloud Drive sync is ON for FLØW folder
-   - Install "Google Drive for Desktop" if not already (for Route 3 archive)
-3. **Test drop:** When ready, drop any file in `iCloud Drive/FLØW/AGENT FLØW/inbox/` from your phone — I'll confirm I can see it
-
----
-
-## Quick Reference Card
-
-| I want to... | Put it in... | What happens |
-|--------------|-------------|--------------|
-| Send agent a file | `FLØW/AGENT FLØW/inbox/` | I pick it up, process, respond via Telegram |
-| Review a finished track | `FLØW/MUSIC FLØW/tø-review/` | I log it, draft metadata, ask for approval |
-| Share album art | `FLØW/IMAGE FLØW/tø-review/` | I pair it with the right release |
-| Write/edit copy | `FLØW/WØRKING/drafts/` | I can read and help edit |
-| Archive permanently | I move it to Google Drive | Organized in the data lake |
-| Push code | `git push` to GitHub | I pull and review |
-| Quick note from phone | `FLØW/AGENT FLØW/inbox/` or Apple Notes | I grab it |
+**Active work stays in iCloud Documents. Finished work gets archived to Google Drive.**
